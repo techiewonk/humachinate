@@ -6,7 +6,7 @@ if __name__ == "__main__":
     except:  # noqa
         print(
             "\n\nAn error occurred while building the project, "
-            "please ensure you have the most updated version of setuptools, "
+            "please ensure you have the most updated version of new setuptools, "
             "setuptools_scm and wheel with:\n"
             "   pip install -U setuptools setuptools_scm wheel\n\n"
         )
