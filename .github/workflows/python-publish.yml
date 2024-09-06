@@ -16,6 +16,8 @@ jobs:
       - name: Install pypa/build
         run: >-
           python3 -m pip install build --user
+      - name: Clean dist directory
+        run: rm -rf dist/* # Clean dist directory before building
       - name: Build a binary wheel and a source tarball
         run: python3 -m build
       - name: Store the distribution packages
@@ -79,9 +81,6 @@ jobs:
           --repo '${{ github.repository }}'
           --notes ""
       - name: Upload artifact signatures to GitHub Release
-        # Upload to GitHub Release using the `gh` CLI.
-        # `dist/` contains the built packages, and the
-        # sigstore-produced signatures and certificates.
         run: >-
           gh release upload
           '${{ github.ref_name }}' dist/**
