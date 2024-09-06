@@ -6,6 +6,8 @@ on:
       - main # This triggers the workflow on pushes to the main branch
     tags:
       - "v*" # Also triggers on tag pushes with version-like tags
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -35,7 +37,7 @@ jobs:
           git tag "v$version"
           git push origin "v$version"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to push the new tag
+          GITHUB_TOKEN: ${{ secrets.TK }} # Required to push the new tag
 
       - name: Build a binary wheel and a source tarball
         run: python3 -m build
