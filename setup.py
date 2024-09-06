@@ -2,12 +2,7 @@ from setuptools import setup
 
 if __name__ == "__main__":
     try:
-        setup(
-            use_scm_version={
-                "version_scheme": "no-guess-dev", 
-                "local_scheme": "no-local-version"  # Prevent local versioning
-            }
-        )
+        setup(use_scm_version=True)  # Let pyproject.toml handle the configuration
     except:  # noqa
         print(
             "\n\nAn error occurred while building the project, "
