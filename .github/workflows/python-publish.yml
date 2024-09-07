@@ -53,17 +53,17 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Use commitizen to bump the version, handle exit 16 gracefully
-      - name: Bump version with commitizen
+      # Use commitizen to bump the version and create a new release tag
+      - name: Bump version and create tag with commitizen
         run: |
-          cz bump --yes || true  # Allow workflow to continue even if changelog fails
+          cz bump --yes  # This will bump the version and create a new tag
 
       # Push the bumped version and the new tag back to Git
       - name: Push changes to Git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token to push changes
         run: |
-          git push --follow-tags
+          git push --follow-tags  # Pushes both commits and new tag to GitHub
 
       # Build a binary wheel and a source tarball using the build tool
       - name: Build a binary wheel and a source tarball
@@ -138,7 +138,7 @@ jobs:
           path: dist/
 
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v3.0.0
+        uses: sigstore/gh-action-sigstore-python@v2.1.1
         with:
           inputs: |
             ./dist/*.tar.gz
@@ -148,8 +148,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Set GH_TOKEN environment variable
         run: |
+          tag_name=${{ github.ref }}
+          tag_name=${tag_name#refs/tags/}  # Extract tag name from refs/tags/v1.0.1
           gh release create \
-            '${{ github.ref_name }}' \
+            "$tag_name" \
             --repo '${{ github.repository }}' \
             --notes ""
 
@@ -157,6 +159,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Set GH_TOKEN environment variable
         run: |
+          tag_name=${{ github.ref }}
+          tag_name=${tag_name#refs/tags/}  # Extract tag name from refs/tags/v1.0.1
           gh release upload \
-            '${{ github.ref_name }}' dist/** \
+            "$tag_name" dist/** \
             --repo '${{ github.repository }}'
