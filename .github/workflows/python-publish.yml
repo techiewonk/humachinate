@@ -61,7 +61,7 @@ jobs:
       # Update the CHANGELOG.md using commitizen
       - name: Update CHANGELOG.md
         run: |
-          cz changelog || true  # Allow the workflow to continue even if no tag is found
+          cz changelog # Allow the workflow to continue even if no tag is found
 
       # Commit and push the updated CHANGELOG.md to the repository, only if it has changed
       - name: Commit and push updated CHANGELOG.md
