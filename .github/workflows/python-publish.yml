@@ -15,9 +15,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install pipenv
+      # Install pipenv and build tools
+      - name: Install pipenv and build tools
         run: |
-          python -m pip install --upgrade pipenv wheel
+          python -m pip install --upgrade pipenv wheel build
+
       - id: cache-pipenv
         uses: actions/cache@v1
         with:
@@ -28,9 +30,12 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
           pipenv install --python 3.11 --deploy --dev
+
+      # Build a binary wheel and a source tarball using the build tool
       - name: Build a binary wheel and a source tarball
         run: |
-          pipenv run build
+          pipenv run python -m build
+
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
