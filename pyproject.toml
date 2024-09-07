@@ -3,20 +3,22 @@
 requires = ["setuptools>=46.1.0", "setuptools_scm[toml]>=5"]
 build-backend = "setuptools.build_meta"
 
-[project]
-# version = "0.0.1"  # Remove any existing version parameter.
-dynamic = ["version"]
+# [project]
+# # version = "0.0.1"  # Remove any existing version parameter.
+# dynamic = ["version"]
 
-[tool.setuptools_scm]
-# For smarter version schemes and other configuration options,
-# check out https://github.com/pypa/setuptools_scm
-version_scheme = "no-guess-dev"
-local_scheme = "no-local-version" # Add this line to prevent local versions
+# [tool.setuptools_scm]
+# # For smarter version schemes and other configuration options,
+# # check out https://github.com/pypa/setuptools_scm
+# version_scheme = "no-guess-dev"
+# local_scheme = "no-local-version" # Add this line to prevent local versions
+
 
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"
 version_scheme = "pep440"
-version = "0.1.0"
+version = "0.0.1"
 update_changelog_on_bump = true
 major_version_zero = true
+annotated_tag = true

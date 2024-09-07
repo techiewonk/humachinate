@@ -78,7 +78,7 @@ def parse_args(args):
         action="version",
         version=f"humachinate {__version__}",
     )
-    parser.add_argument(dest="n", help="n-th Fibonacci ok number",
+    parser.add_argument(dest="n", help="n-th Fibonacci 2 ok number",
                         type=int, metavar="INT")
     parser.add_argument(
         "-v",
