@@ -56,7 +56,7 @@ jobs:
       # Use commitizen to bump the version and create a new release tag
       - name: Bump version and create tag with commitizen
         run: |
-          cz bump --yes  # This will bump the version and create a new tag
+          cz bump --increment PATCH --yes # This will bump the version and create a new tag
 
       # Update the CHANGELOG.md using commitizen
       - name: Update CHANGELOG.md
