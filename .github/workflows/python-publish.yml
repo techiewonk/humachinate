@@ -9,11 +9,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      # Setup Python (faster than using Python container)
+      # Setup Python 3.11 (explicit version)
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
       - name: Install pipenv
         run: |
@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
-          pipenv install --deploy --dev
+          pipenv install --python 3.11 --deploy --dev
       - name: Build a binary wheel and a source tarball
         run: |
           pipenv run build
