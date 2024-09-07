@@ -61,14 +61,18 @@ jobs:
       # Update the CHANGELOG.md using commitizen
       - name: Update CHANGELOG.md
         run: |
-          cz changelog  # Generate or update CHANGELOG.md
+          cz changelog || true  # Allow the workflow to continue even if no tag is found
 
-      # Commit and push the updated CHANGELOG.md to the repository
+      # Commit and push the updated CHANGELOG.md to the repository, only if it has changed
       - name: Commit and push updated CHANGELOG.md
         run: |
-          git add CHANGELOG.md
-          git commit -m "chore(release): update CHANGELOG.md"
-          git push
+          if [ -n "$(git status --porcelain CHANGELOG.md)" ]; then
+            git add CHANGELOG.md
+            git commit -m "chore(release): update CHANGELOG.md"
+            git push
+          else
+            echo "No changes in CHANGELOG.md, skipping commit."
+          fi
 
       # Push the bumped version and the new tag back to Git
       - name: Push changes to Git
@@ -150,7 +154,7 @@ jobs:
           path: dist/
 
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v2.1.1
+        uses: sigstore/gh-action-sigstore-python@v3.0.0
         with:
           inputs: |
             ./dist/*.tar.gz

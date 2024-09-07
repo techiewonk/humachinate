@@ -1,8 +1,15 @@
+## v0.0.3 (2024-09-07)
+
+### Fix
+
+- New Update
+
 ## v0.0.2 (2024-09-07)
 
 ### Fix
 
-- initial version
+- workflow
+- Clean
 
 ## v0.0.1 (2024-09-07)
 
@@ -14,6 +21,8 @@
 
 ### Fix
 
+- clean
+- initial version
 - cz bump --increment PATCH --yes
 - CHANGELOG
 - test
