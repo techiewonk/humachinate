@@ -1,139 +1,37 @@
-name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
+name: Publish Python 🐍 distributions 📦 to PyPI
 
-on:
-  push:
-    branches:
-      - main # This triggers the workflow on pushes to the main branch
-    tags:
-      - "v*" # Also triggers on tag pushes with version-like tags
-  release:
-    types: [created]
-
+on: push
 jobs:
-  build:
-    name: Build distribution 📦
+  build-and-publish:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository code
+        uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # Setup Python (faster than using Python container)
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
           python-version: "3.x"
 
-      - name: Install pypa/build
-        run: python3 -m pip install build --user
-
-      - name: Clean dist directory
-        run: rm -rf dist/* # Clean dist directory before building
-
-      - name: Auto-bump version and tag
-        id: auto_version
+      - name: Install pipenv
         run: |
-          # Ensure setuptools_scm is used and a new version is generated based on changes
-          git fetch --tags
-          version=$(python3 setup.py --version)
-          git tag "v$version"
-          git push origin "v$version"
-        env:
-          GITHUB_TOKEN: ${{ secrets.TK }} # Required to push the new tag
+          python -m pip install --upgrade pipenv wheel
+      - id: cache-pipenv
+        uses: actions/cache@v1
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
+      - name: Install dependencies
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        run: |
+          pipenv install --deploy --dev
       - name: Build a binary wheel and a source tarball
-        run: python3 -m build
-
-      - name: Store the distribution packages
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-
-  publish-to-pypi:
-    name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
-    if: startsWith(github.ref, 'refs/tags/') # Only publish to PyPI on tag pushes
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/humachinate
-    permissions:
-      id-token: write # Required for trusted publishing
-
-    steps:
-      - name: Download all the dists
-        uses: actions/download-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-
+        run: |
+          pipenv run build
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@master
         with:
-          password: ${{ secrets.PYPI_TOKEN }}
-
-  github-release:
-    name: >-
-      Sign the Python 🐍 distribution 📦 with Sigstore
-      and upload them to GitHub Release
-    needs:
-      - publish-to-pypi
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write # Required for making GitHub Releases
-      id-token: write # Required for Sigstore signing
-
-    steps:
-      - name: Download all the dists
-        uses: actions/download-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-
-      - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v2.1.1
-        with:
-          inputs: >-
-            ./dist/*.tar.gz
-            ./dist/*.whl
-
-      - name: Create GitHub Release
-        run: |
-          gh release create \
-            '${{ github.ref_name }}' \
-            --repo '${{ github.repository }}' \
-            --notes ""
-
-      - name: Upload artifact signatures to GitHub Release
-        run: |
-          gh release upload \
-            '${{ github.ref_name }}' dist/** \
-            --repo '${{ github.repository }}'
-
-  publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
-    needs:
-      - build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/humachinate
-
-    permissions:
-      id-token: write # Required for trusted publishing
-
-    steps:
-      - name: Download all the dists
-        uses: actions/download-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-
-      - name: Publish distribution 📦 to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          password: ${{ secrets.PYPI_API_TOKEN }}
