@@ -7,11 +7,11 @@ build-backend = "setuptools.build_meta"
 # # version = "0.0.1"  # Remove any existing version parameter.
 # dynamic = ["version"]
 
-# [tool.setuptools_scm]
-# # For smarter version schemes and other configuration options,
-# # check out https://github.com/pypa/setuptools_scm
-# version_scheme = "no-guess-dev"
-# local_scheme = "no-local-version" # Add this line to prevent local versions
+[tool.setuptools_scm]
+# For smarter version schemes and other configuration options,
+# check out https://github.com/pypa/setuptools_scm
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version" # Add this line to prevent local versions
 
 
 [tool.commitizen]
