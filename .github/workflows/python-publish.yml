@@ -6,10 +6,10 @@ permissions:
 on:
   push:
     branches:
-      - main # This triggers the workflow on pushes to the main branch
+      - main # Trigger the workflow on pushes to the main branch
       - release # Trigger the workflow on pushes to the release branch
     tags:
-      - "v*" # Also triggers on tag pushes with version-like tags
+      - "v*" # Also trigger on tag pushes with version-like tags
 
 jobs:
   build-and-publish:
@@ -56,12 +56,20 @@ jobs:
       # Use commitizen to bump the version and create a new release tag
       - name: Bump version and create tag with commitizen
         run: |
-          cz bump --increment PATCH --yes # This will bump the version and create a new tag
+          cz bump --increment PATCH --yes # Force a patch version bump and create a tag
 
       # Update the CHANGELOG.md using commitizen
       - name: Update CHANGELOG.md
         run: |
-          cz changelog # Allow the workflow to continue even if no tag is found
+          cz changelog # Generate or update CHANGELOG.md
+
+          # Extract the tag created by commitizen and add "release" prefix
+      - name: Extract the created tag and add "release" prefix
+        id: extract_tag
+        run: |
+          tag=$(git describe --tags --abbrev=0)  # Get the latest tag
+          release_tag="release-$tag"  # Concatenate release with the tag name
+          echo "TAG_NAME=$release_tag" >> $GITHUB_ENV  # Save the tag with prefix to environment variable
 
       # Commit and push the updated CHANGELOG.md to the repository, only if it has changed
       - name: Commit and push updated CHANGELOG.md
@@ -79,7 +87,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token to push changes
         run: |
-          git push --follow-tags  # Pushes both commits and new tag to GitHub
+          git push --follow-tags  # Push both commits and the new tag to GitHub
 
       # Build a binary wheel and a source tarball using the build tool
       - name: Build a binary wheel and a source tarball
@@ -164,10 +172,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Set GH_TOKEN environment variable
         run: |
-          tag_name=${{ github.ref }}
-          tag_name=${tag_name#refs/tags/}  # Extract tag name from refs/tags/v1.0.1
           gh release create \
-            "$tag_name" \
+            "$TAG_NAME" \  # Use the extracted tag name with "release" prefix
             --repo '${{ github.repository }}' \
             --notes ""
 
@@ -175,8 +181,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Set GH_TOKEN environment variable
         run: |
-          tag_name=${{ github.ref }}
-          tag_name=${tag_name#refs/tags/}  # Extract tag name from refs/tags/v1.0.1
           gh release upload \
-            "$tag_name" dist/** \
+            "$TAG_NAME" dist/** \
             --repo '${{ github.repository }}'
