@@ -24,10 +24,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      # Install pipenv and commitizen
-      - name: Install pipenv and commitizen
+      # Install pipenv, wheel, build, and commitizen
+      - name: Install pipenv, wheel, build, and commitizen
         run: |
-          python -m pip install --upgrade pipenv wheel commitizen
+          python -m pip install --upgrade pipenv wheel build commitizen
 
       - id: cache-pipenv
         uses: actions/cache@v4
@@ -63,6 +63,7 @@ jobs:
         run: |
           pipenv run python -m build
 
+      # Publish distribution 📦 to PyPI
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
