@@ -1,6 +1,10 @@
 name: Publish Python 🐍 distributions 📦 to PyPI
 
-on: push
+on:
+  push:
+    tags:
+      - "v*" # This will trigger the workflow on tags starting with 'v'
+
 jobs:
   build-and-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
@@ -25,6 +29,18 @@ jobs:
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+
+      # Extract version from the Git tag and update pyproject.toml
+      - name: Extract version from Git tag
+        id: get_version
+        run: |
+          TAG_VERSION=$(git describe --tags)
+          echo "TAG_VERSION=${TAG_VERSION#v}" >> $GITHUB_ENV  # Remove the 'v' prefix if present
+
+      # Inject the extracted version into pyproject.toml
+      - name: Update pyproject.toml with version
+        run: |
+          sed -i "s/^version = \".*\"/version = \"${{ env.TAG_VERSION }}\"/" pyproject.toml
 
       # Install dependencies, including build
       - name: Install dependencies
