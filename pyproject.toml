@@ -16,6 +16,7 @@ local_scheme = "no-local-version" # Add this line to prevent local versions
 
 [tool.commitizen]
 name = "cz_conventional_commits"
+changelog_file = "CHANGELOG.rst"
 tag_format = "v$version"
 version_scheme = "pep440"
 version = "0.0.8"

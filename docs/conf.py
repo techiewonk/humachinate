@@ -74,6 +74,14 @@ extensions = [
     "sphinx.ext.napoleon",
 ]
 
+# Disable applehelp if it's auto-loaded
+if 'sphinxcontrib.applehelp' in sys.modules:
+    del sys.modules['sphinxcontrib.applehelp']
+if 'sphinxcontrib.htmlhelp' in sys.modules:
+    del sys.modules['sphinxcontrib.htmlhelp']
+if 'sphinx.domains.javascript' in sys.modules:
+    del sys.modules['sphinx.domains.javascript']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -282,5 +290,6 @@ intersphinx_mapping = {
     "setuptools": ("https://setuptools.pypa.io/en/stable/", None),
     "pyscaffold": ("https://pyscaffold.org/en/stable", None),
 }
+
 
 print(f"loading configurations for {project} {version} ...", file=sys.stderr)

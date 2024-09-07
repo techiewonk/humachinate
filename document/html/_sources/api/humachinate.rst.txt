@@ -1,0 +1,21 @@
+humachinate package
+===================
+
+Submodules
+----------
+
+humachinate.skeleton module
+---------------------------
+
+.. automodule:: humachinate.skeleton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: humachinate
+   :members:
+   :undoc-members:
+   :show-inheritance:
