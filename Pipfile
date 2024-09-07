@@ -7,6 +7,12 @@ name = "pypi"
 wheel = "*"
 commitizen = "*"
 build = "*"
+pyautogui = "*"
+pyclick = "*"
+asyncio = "*"
+keyboard = "*"
+pytest-cov = "*"
+pytest = "*"
 
 [dev-packages]
 pre-commit = "*"
