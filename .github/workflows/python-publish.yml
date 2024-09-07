@@ -24,8 +24,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      # Install pipenv, wheel, build, and commitizen
-      - name: Install pipenv, wheel, build, and commitizen
+      # Install pipenv globally
+      - name: Install pipenv globally
         run: |
           python -m pip install --upgrade pipenv wheel build commitizen
 
@@ -35,10 +35,13 @@ jobs:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
-      # Install dependencies
-      - name: Install dependencies
+      # Install dependencies and build module within pipenv
+      - name: Install dependencies and build module within pipenv
         run: |
           pipenv install --python 3.11 --dev
+          pipenv install wheel
+          pipenv install commitizen
+          pipenv install build  # Ensure 'build' is installed within pipenv
 
       # Configure Git user identity before commitizen
       - name: Configure Git user
