@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a0be6dcab17876f9b5dd9eb7769ed64b517084c3a2f6b1dc6f24e35a65bcf2a8"
+            "sha256": "21a502fff5cb026566926f926e21feeb412018e049f359fb714e7725ebdb12c6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -33,6 +33,14 @@
             ],
             "index": "pypi",
             "version": "==3.4.3"
+        },
+        "backports.tarfile": {
+            "hashes": [
+                "sha256:77e284d754527b01fb1e6fa8a1afe577858ebe4e9dad8919e34c862cb399bc34",
+                "sha256:d75e02c268746e1b8144c278978b6e98e85de6ad16f8e4b0844a154557eca991"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==1.2.0"
         },
         "build": {
             "hashes": [
@@ -144,7 +152,7 @@
                 "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44",
                 "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
             ],
-            "markers": "sys_platform == 'win32'",
+            "markers": "os_name == 'nt'",
             "version": "==0.4.6"
         },
         "commitizen": {
@@ -826,7 +834,7 @@
                 "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44",
                 "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
             ],
-            "markers": "sys_platform == 'win32'",
+            "markers": "os_name == 'nt'",
             "version": "==0.4.6"
         },
         "commitizen": {
