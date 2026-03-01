@@ -96,7 +96,7 @@ jobs:
 
       # Store the distribution packages as an artifact
       - name: Store the distribution packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: python-package-distributions
           path: dist/
@@ -115,7 +115,7 @@ jobs:
 
     steps:
       - name: Download the distribution packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: python-package-distributions
           path: dist/
@@ -133,7 +133,7 @@ jobs:
 
     steps:
       - name: Download the distribution packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: python-package-distributions
           path: dist/
@@ -156,7 +156,7 @@ jobs:
 
     steps:
       - name: Download the distribution packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: python-package-distributions
           path: dist/
